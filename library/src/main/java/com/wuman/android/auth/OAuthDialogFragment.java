@@ -353,7 +353,21 @@ class OAuthDialogFragment extends DialogFragmentCompat {
                 String authorizationType = getArguments().getString(ARG_AUTHORIZATION_TYPE);
                 LOGGER.info("url: " + url + ", redirect: " + redirectUri + ", callback: "
                         + isRedirectUriFound(url, redirectUri));
-                if (isRedirectUriFound(url, redirectUri)) {
+                
+                /**
+                 * Chun Hoe 20160614: Handle case when redirect path is /oauth/authorize/{authorization_code}
+                 * when doorkeeper gem is used in auth server
+                 */
+                String AUTHORIZE_PATH = "/oauth/authorize/";
+
+                if (redirectUri == DEFAULT_REDIRECT_URI && url.contains(AUTHORIZE_PATH)) {
+                    // Extract authorization code from the end of url
+                    String code = url.substring(url.lastIndexOf(AUTHORIZE_PATH) + AUTHORIZE_PATH.length());
+                    if (!TextUtils.isEmpty(code)) {
+                        mController.set(code, null, null,
+                                true);
+                    }
+                } else if (isRedirectUriFound(url, redirectUri)) {
                     if (TextUtils.equals(authorizationType, AUTHORIZATION_10A)) {
                         OAuth10aResponseUrl responseUrl = new OAuth10aResponseUrl(url);
                         mController.set(responseUrl.getVerifier(), responseUrl.getError(), null,
