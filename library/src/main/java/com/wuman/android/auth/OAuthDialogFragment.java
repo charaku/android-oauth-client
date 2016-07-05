@@ -48,6 +48,8 @@ class OAuthDialogFragment extends DialogFragmentCompat {
 
     static final Logger LOGGER = Logger.getLogger(OAuthConstants.TAG);
 
+    public static final String DEFAULT_REDIRECT_URI = "urn:ietf:wg:oauth:2.0:oob";
+
     private static final String ARG_AUTHORIZATION_REQUEST_URL = "authRequestUrl";
     private static final String ARG_AUTHORIZATION_TYPE = "authType";
 
